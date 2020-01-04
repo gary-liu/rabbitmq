@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,11 +17,23 @@ public class ProduceMq {
     @Autowired
     RabbitTemplate template;
 
+    @PostConstruct
+    public void init() {
+        template.setReturnCallback(new MyCallBack());
+    }
+
     public void sendMessage(String message) {
 //        template.convertAndSend(message);
 //        template.setReturnCallback(new MyCallBack());
 
         template.convertAndSend("directExchange", "direct.key",message);
+
+    }
+    public void sendManualMessage(String message) {
+//        template.convertAndSend(message);
+
+
+        template.convertAndSend("directExchange", "manual",message);
 
     }
 

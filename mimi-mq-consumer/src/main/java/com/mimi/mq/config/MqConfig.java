@@ -3,6 +3,8 @@ package com.mimi.mq.config;
 
 import com.mimi.mq.callback.MyCallBack;
 import com.mimi.mq.callback.MyConfirmCallback;
+import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -41,6 +43,20 @@ public class MqConfig {
 //        connectionFactory.setPublisherConfirms(true);
 
         return connectionFactory;
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory simpleRabbitListener = new SimpleRabbitListenerContainerFactory();
+        //这个connectionFactory就是我们自己配置的连接工厂直接注入进来
+        simpleRabbitListener.setConnectionFactory(connectionFactory);
+        //这边设置消息确认方式由自动确认变为手动确认
+        simpleRabbitListener.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        //设置消息预取的数量
+        /* 这个数值的大小与性能成正比 但是有上限，与数据可靠性,客户端的利用率成反比 */
+        simpleRabbitListener.setPrefetchCount(1);
+        return simpleRabbitListener;
+
     }
 
 

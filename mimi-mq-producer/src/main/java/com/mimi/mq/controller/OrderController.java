@@ -34,4 +34,10 @@ public class OrderController {
         System.out.println("消息确认2");
         produceMq.sendMessage();
     }
+
+    @GetMapping("/manual")
+    public void manual(String manual) {
+        System.out.println("manual model");
+        produceMq.sendManualMessage(manual);
+    }
 }

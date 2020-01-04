@@ -27,14 +27,32 @@ public class MqConfig {
     @Bean
     public DirectExchange directExchange() {
 //        创建一个direct类型的交换机
-//        return new DirectExchange("directExchange");
+        return new DirectExchange("directExchange");
 
-        Map<String, Object> argsMap = new HashMap<>();
-        /*声明一个备用交换机  备用交换机必须是已经存在的交换机  有备用交换机时
-        * 调用失败时不会调用失败回调 只有在备用交换机也失败时才会调用失败回
-        * 调*/
-        argsMap.put("alternate-exchange", "fanoutExchange");
-        return new DirectExchange("directExchange", true, false, argsMap);
+
+    }
+
+    @Bean
+    public DirectExchange defaultExchange() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("alternate-exchange","exchange");
+        return  new DirectExchange("directExchangeTest2",false,false,map);
+    }
+
+
+    @Bean
+    public Queue dealQueue() {
+        Map<String,Object> map = new HashMap<>();
+        //设置消息的过期时间 单位毫秒
+        map.put("x-message-ttl", 10000);
+        //设置附带的死信交换机
+        map.put("x-dead-letter-exchange","exchange");
+        //指定重定向的路由建 消息作废之后可以决定需不需要更改他的路由建 如果需要 就在这里指定
+        map.put("x-dead-letter-routing-key","dead.order");
+        return new Queue("directExchange", true,false,false,map);
+
+
+
     }
 
     @Bean
@@ -43,10 +61,25 @@ public class MqConfig {
         return new Queue("testQueue", true);
     }
 
+
+
+
     @Bean
     public Binding binding() {
         //绑定一个队列 to: 绑定到哪个交换机上面 with：绑定的路由建（routingKey）
         return BindingBuilder.bind(queue()).to(directExchange()).with("direct.key");
+    }
+
+    @Bean
+    public Queue manualQueue() {
+        return new Queue("manualQueue", false);
+    }
+
+
+    @Bean
+    public Binding manualBind() {
+
+        return  BindingBuilder.bind(manualQueue()).to(directExchange()).with("manual");
     }
 
 
