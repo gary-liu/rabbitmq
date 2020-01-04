@@ -28,4 +28,10 @@ public class OrderController {
         System.out.println("消息确认");
         produceMq.sendConfirmMessage(confirmOrder);
     }
+
+    @GetMapping("confirmOrder2.do")
+    public void confirmOrder() {
+        System.out.println("消息确认2");
+        produceMq.sendMessage();
+    }
 }

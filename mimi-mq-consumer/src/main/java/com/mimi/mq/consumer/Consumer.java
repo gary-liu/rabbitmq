@@ -12,12 +12,14 @@ public class Consumer {
     /*监听队列*/
     @RabbitListener(queues={"testQueue"})
     public void get(String message) {
+        System.out.println("消息费者1");
         System.out.println(message);
 
     }
 
     @RabbitListener(queues={"testQueue"})
     public void getMessage(Message message) throws UnsupportedEncodingException {
+        System.out.println("消息费者2");
         System.out.println(new String(message.getBody(),"utf-8") );
     }
 
