@@ -1,0 +1,8 @@
+spring:
+  rabbitmq:
+    host:
+    port:
+    username:
+    password:
+    virtual-host:
+

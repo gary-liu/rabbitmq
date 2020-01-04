@@ -1,0 +1,13 @@
+spring:
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "gary"
+    password: "123456"
+    virtual-host: "localtest"
+    template:
+      mandatory: true  #开启失败回调
+    publisher-confirms: true #开启发送确认
+
+server:
+  port: 8080
